@@ -1,5 +1,8 @@
 package ar.edu.unlam.tallerweb1.modelo;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,6 +23,9 @@ public class Usuario {
 	private String email;
 	private String password;
 	private String rol;
+	private String nombre;
+	private String apellido;
+	private String fechaNacimiento;
 	
 	public Long getId() {
 		return id;
@@ -47,4 +53,47 @@ public class Usuario {
 	public void setRol(String rol) {
 		this.rol = rol;
 	}
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	public String getApellido() {
+		return apellido;
+	}
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
+	public String getFechaNacimiento() {
+		return fechaNacimiento;
+	}
+	public void setFechaNacimiento(String fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
+	}
+	
+	public int getEdad() {
+
+		String sDate=this.fechaNacimiento;
+		
+		//Convertimos el String en LocalDate
+		LocalDate fechaNac = LocalDate.parse(sDate, DateTimeFormatter.ofPattern("dd/MM/yyyy") );
+		//Obtenemos la fecha actual y en formato LocalDate
+		LocalDate fechaHoy = LocalDate.now();
+		
+		 //ahora comparar los años de las dos fechas y asi obtener la edad
+		
+	    int diffYear = fechaHoy.getYear() - fechaNac.getYear();
+	    int diffMonth = fechaHoy.getMonthValue() -fechaHoy.getMonthValue();
+	    int diffDay = fechaHoy.getDayOfMonth() - fechaNac.getDayOfMonth();
+	    
+	    // Si está en ese año pero todavía no los ha cumplido se resta 1
+	    if (diffMonth < 0 || (diffMonth == 0 && diffDay < 0)) {
+	        diffYear = diffYear - 1;
+	    }
+		
+		 return diffYear;
+
+	}
+	
 }
