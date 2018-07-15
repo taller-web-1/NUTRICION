@@ -27,23 +27,17 @@ public class UsuarioTest extends SpringTest{
     public void ProbarQueSeGuardeUsuarioTest(){
        
        Usuario usuario = new Usuario();
-       usuario.setEmail("ariel@live.com");
+       usuario.setEmail("test@live.com");
        usuario.setPassword("1234");
        
-        getSession().save(usuario);
-       
-//        Usuario resultado=
-//                (Usuario)getSession().createCriteria(Usuario.class)
-//                .add(Restrictions.eq("email", "ariel@live.com"))
-//                .uniqueResult();
+        //getSession().save(usuario);
+       servicioLogin.crearUsuario(usuario);
         
     /*   Formula formula = new Formula();
         System.out.println("INICIA FORMULA******************************************");
         formula.generarListaPesoIdeal("10/10/1987", 60, 80, (double) 500);*/
         
-        //Usuario prueba = new Usuario();
-        
-        Usuario resultado=servicioLogin.consultarUsuario(usuario);
+       Usuario resultado=servicioLogin.consultarUsuario(usuario);
        
         assertThat(resultado).isNotNull();     
     }
