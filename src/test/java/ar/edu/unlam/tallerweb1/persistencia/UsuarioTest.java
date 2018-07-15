@@ -21,7 +21,7 @@ import ar.edu.unlam.tallerweb1.servicios.ServicioLogin;
 public class UsuarioTest extends SpringTest{
    
     @Inject
-    private UsuarioDao dao;
+    private ServicioLogin servicioLogin;
    
     @Test @Rollback @Transactional
     public void ProbarQueSeGuardeUsuarioTest(){
@@ -41,9 +41,9 @@ public class UsuarioTest extends SpringTest{
         System.out.println("INICIA FORMULA******************************************");
         formula.generarListaPesoIdeal("10/10/1987", 60, 80, (double) 500);*/
         
-        Usuario prueba = new Usuario();
+        //Usuario prueba = new Usuario();
         
-        Usuario resultado=dao.consultarUsuario(usuario);
+        Usuario resultado=servicioLogin.consultarUsuario(usuario);
        
         assertThat(resultado).isNotNull();     
     }
