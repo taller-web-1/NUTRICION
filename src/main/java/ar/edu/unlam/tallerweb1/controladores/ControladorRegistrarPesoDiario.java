@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
+
+import ar.edu.unlam.tallerweb1.modelo.Paciente;
 import ar.edu.unlam.tallerweb1.modelo.RegistrarPesoDiarioDTO;
 import ar.edu.unlam.tallerweb1.servicios.ServicioRegistrarPesoDiario;
 
@@ -23,13 +25,24 @@ import ar.edu.unlam.tallerweb1.servicios.ServicioRegistrarPesoDiario;
 public class ControladorRegistrarPesoDiario {
 	@Inject
 	private ServicioRegistrarPesoDiario servicioRegistrarPesoDiario;
+	
+	public void setServicioRegistrarPesoDiario(ServicioRegistrarPesoDiario servicioRegistrarPesoDiario) {
+		this.servicioRegistrarPesoDiario = servicioRegistrarPesoDiario;
+	}
 
 	@RequestMapping(path = "/registrarPesoDiario", method = RequestMethod.GET)
 	public ModelAndView irARegistroPesoDiario(HttpServletRequest request) {
 		ModelMap model = new ModelMap();
 		RegistrarPesoDiarioDTO registrarPesoDiarioDTO = new RegistrarPesoDiarioDTO();
-		model.put("registrarPesoDiarioDTO",registrarPesoDiarioDTO);
-		model.put("listaPacientes",servicioRegistrarPesoDiario.ObtenerPacientes((Long) request.getSession().getAttribute("ID")));
+		
+		List<Paciente> listadoPacientes = servicioRegistrarPesoDiario.ObtenerPacientes((Long) request.getSession().getAttribute("ID"));
+		if(listadoPacientes.isEmpty()) {
+			String error = "No hay pacientes cargados en el sistema asignados al nutricionista.";
+			model.put("error", error);
+		}
+		model.put("registrarPesoDiarioDTO", registrarPesoDiarioDTO);
+		model.put("listaPacientes", listadoPacientes);
+		
 		return new ModelAndView("registrarPesoDiario", model);
 	}
 	
@@ -43,16 +56,16 @@ public class ControladorRegistrarPesoDiario {
 		int id = registrarPesoDiarioDTO.getIdPaciente().intValue();
 		
 		registrarPesoDiarioDTO.setPeso((float)registrarPesoDiarioDTO.getPeso());
-		
+
 		Date fecha = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		String f = dateFormat.format(fecha);
 		
-		RegistrarPesoDiarioDTO registroBuscado = servicioRegistrarPesoDiario.ConsultarRegistroFecha(id, f);
+		boolean registroBuscado = servicioRegistrarPesoDiario.ConsultarRegistroFecha(id, f);
 		
-		if(registroBuscado != null) {
+		if(registroBuscado != true) {
 			// si ya existe registro ese dia se le avisa que no puede ingresarlo nuevamente
-
+			
 			model.put("error", "Ya existe un registro en la fecha actual, vuelva mañana para ingresar un nuevo registro.");
 			return new ModelAndView("/registrarPesoDiario", model);
 		}

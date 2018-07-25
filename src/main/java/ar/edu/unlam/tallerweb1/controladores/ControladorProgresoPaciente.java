@@ -1,6 +1,5 @@
 package ar.edu.unlam.tallerweb1.controladores;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,11 +15,10 @@ import org.springframework.web.servlet.ModelAndView;
 import ar.edu.unlam.tallerweb1.modelo.CompararProgresoDTO;
 import ar.edu.unlam.tallerweb1.modelo.Formula;
 import ar.edu.unlam.tallerweb1.modelo.Paciente;
-import ar.edu.unlam.tallerweb1.modelo.PacienteDTO;
+
 import ar.edu.unlam.tallerweb1.modelo.Plan;
 import ar.edu.unlam.tallerweb1.modelo.ProgresoPesoIdeal;
-import ar.edu.unlam.tallerweb1.modelo.RegistrarPesoDiarioDTO;
-import ar.edu.unlam.tallerweb1.modelo.Usuario;
+
 import ar.edu.unlam.tallerweb1.servicios.ServicioPacientes;
 import ar.edu.unlam.tallerweb1.servicios.ServicioPlan;
 import ar.edu.unlam.tallerweb1.servicios.ServicioRegistrarPesoDiario;
@@ -74,13 +72,13 @@ public class ControladorProgresoPaciente {
 	}
 	
 	@RequestMapping(path = "/progresoPaciente", method = RequestMethod.POST)
-	public ModelAndView verProgresoPaciente(@ModelAttribute("idUsuario") Long idUsuario, HttpServletRequest request) {
+	public ModelAndView verProgresoPaciente(@ModelAttribute("paciente") Paciente pacienteSelect, HttpServletRequest request) {
 		ModelMap model = new ModelMap();
 		
 		//Long longId = idUsuario;
 		//int id = longId.intValue();
 				
-		Paciente paciente = servicioPacientes.obtenerPaciente(idUsuario);
+		Paciente paciente = servicioPacientes.obtenerPaciente(pacienteSelect.getId());
 		
 		if(paciente == null) {
 			
@@ -89,7 +87,7 @@ public class ControladorProgresoPaciente {
 		}
 		
 		Plan plan = servicioPlan.consultarPlan(paciente.getPlanAsociado_id());
-		System.out.println("***************PRIMER BANDERA");
+
 		Formula formula = new Formula();
 		
 		Double pesoIdeal = formula.calcularPesoIdeal(paciente.getAltura(), paciente.getSexo());
@@ -112,12 +110,11 @@ public class ControladorProgresoPaciente {
 		int diasObjetivo = (int)(((pesoAPerderOGanar * 1000) * 7) / caloriasPGPorDia);
 		
 		List<ProgresoPesoIdeal> listaPesoIdeal = formula.generarListaPesoIdeal(paciente.getFecha_inicio(), diasObjetivo, paciente.getPeso(), caloriasPGPorDia);
-		System.out.println("***************SEGUNDA BANDERA");
-		List<CompararProgresoDTO> listaComparacion = formula.generarListaComparacion(servicioRegistrarPeso.ObtenerRegistros(idUsuario), listaPesoIdeal);
+
+		List<CompararProgresoDTO> listaComparacion = formula.generarListaComparacion(servicioRegistrarPeso.ObtenerRegistros(pacienteSelect.getId()), listaPesoIdeal);
 		
 		model.put("Lista", listaComparacion);
 		model.put("pesoInicial", paciente.getPeso());
-		System.out.println("***************ULTIMA BANDERA");
 		return new ModelAndView("progresoPaciente", model);
 	}
 }

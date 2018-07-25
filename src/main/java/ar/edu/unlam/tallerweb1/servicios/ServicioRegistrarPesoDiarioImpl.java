@@ -20,7 +20,7 @@ public class ServicioRegistrarPesoDiarioImpl implements ServicioRegistrarPesoDia
 	@Inject
 	private RegistrarPesoDiarioDao registrarPesoDiarioDao;
 	@Override
-	public RegistrarPesoDiarioDTO ConsultarRegistroFecha(int id, String fecha){
+	public boolean ConsultarRegistroFecha(int id, String fecha){
 		return registrarPesoDiarioDao.ConsultarRegistroFecha(id, fecha);
 	}
 	@Override
@@ -36,5 +36,10 @@ public class ServicioRegistrarPesoDiarioImpl implements ServicioRegistrarPesoDia
 	@Override
 	public List<Paciente> ObtenerPacientes(Long id) {
 		return registrarPesoDiarioDao.ObtenerPacientes(id);
+	}
+	
+	@Override
+	public void cargarRegistrosIniciales() {
+		registrarPesoDiarioDao.cargarRegistrosIniciales();
 	}
 }

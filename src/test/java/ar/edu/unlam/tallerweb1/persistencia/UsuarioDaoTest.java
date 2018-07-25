@@ -21,7 +21,7 @@ public class UsuarioDaoTest extends SpringTest {
 	public void buscarUsuarioExistenteDeberiaEncontrarUnUsuario(){
 		
 		Usuario usuario = new Usuario();
-		usuario.setEmail("test@live.com");
+		usuario.setEmail("ariel@live.com");
 		usuario.setPassword("1234");
 		
 		getSession().save(usuario);

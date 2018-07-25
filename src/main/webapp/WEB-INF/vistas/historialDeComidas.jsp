@@ -10,61 +10,61 @@
 	    <link rel="stylesheet" href="css/estilos.css">
 	</head>
 	<body>
-	
-
 		
 		<header class="header container">
-			<h1 class="logo">Registrar Peso Diario</h1>
-			<nav>
+			<h1 class="logo">Control Nutricional</h1>
+            <nav>
                  <ul class="container">
                     <li><a class="btn" href="home">Inicio</a></li>
                     <c:if test="${ROL=='medico'}" >
                     	<li><a class="btn" href="registrarusuario">Registrar Paciente</a></li>  
-                    	<li><a class="btn active white" href="registrarPesoDiario">Registrar Peso Diario</a></li>
+                    	<li><a class="btn" href="registrarPesoDiario">Registrar Peso Diario</a></li>
                    		<li><a class="btn" href="progresoSeleccionarPaciente">Ver Progreso</a></li>
                    	</c:if>
                     <c:if test="${ROL!='medico'}" >
                     	<li><a class="btn" href="verplan">Ver Plan</a></li>
                     	<li><a class="btn" href="registrarConsumoAlimento">Registrar Comida</a></li>
                     </c:if>
+                    <li><a class="btn active white" href="historialDeComidas">Historial Comidas</a></li>
                 </ul>
             </nav>
 		</header>
-		<div class = "main container">	
-			<div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-			<c:choose>
-					<c:when test="${not empty error}">
-						<hr class="colorgraph"><br>
-						<%--Bloque que es visible si el elemento error no está vacío	--%>
-				        <h4><span style="color:red;">${error}</span></h4>
-				        <br>
-			        </c:when>
-			        <c:otherwise>	
-			<form:form action="completarRegistroPesoDiario" method="POST" modelAttribute="registrarPesoDiarioDTO">
-				
-				<form:select path="idPaciente" class="form-control">
-				
-				<c:forEach items="${listaPacientes}" var = "i">
-				<form:option value="${i.id}">${i.nombre}</form:option>
-				</c:forEach>]
-					
-				</form:select>
-				<br>
-				<form:label path="peso">Peso</form:label>
-				<form:input path="peso" id="peso" type="number" class="form-control" required="required" placeholder="Exprese su peso en kilogramos" /> 
-				<br>
-				<button class="btn btn-lg btn-primary btn-block" Type="Submit">Confirmar</button>
+		
+		<div class = "main container">
+		
+		<div id="table" class="mainbox col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2">
 			
-			</form:form>
-			</c:otherwise>
-				</c:choose>
-			<%--Bloque que es visible si el elemento error no está vacío	--%>
-				<c:if test="${not empty error}">
-			        <h4><span>${error}</span></h4>
-			        <br>
-		        </c:if>	
-			</div>
+			<h3> Historial de Comidas</h3>
+			<h4></h4> 
+
+        <table id="acrylic">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Hora</th>  
+                    <th>Comida</th>
+                    <th>Bebida</th>
+                    <th>KCal</th>    
+                </tr>
+            </thead>
+            
+            <tbody>
+                
+                <c:forEach items="${listaRegistros}" var="reg">
+                <tr>
+                    <td>${reg.fecha}</td>
+                    <td>${reg.hora}</td>
+                    <td>${reg.comida} (x${reg.cantComida})</td>
+                    <td>${reg.bebida} (x${reg.cantBebida})</td>
+                    <td>${reg.totalCalorias}</td>
+                </tr>
+                </c:forEach>
+                
+            </tbody>
+        </table>
 		</div>
+	  	    
+	  </div>
 		
 		<jsp:include page="footer.jsp"></jsp:include>
 		
@@ -74,5 +74,3 @@
 		<script src="js/bootstrap.min.js" type="text/javascript"></script>
 	</body>
 </html>
-
-

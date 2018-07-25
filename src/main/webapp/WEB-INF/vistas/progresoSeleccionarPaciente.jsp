@@ -22,10 +22,16 @@
 			<h1 class="logo">Control Nutricional</h1>
             <nav>
                  <ul class="container">
-                    <li><a  href="home">Inicio</a></li>
-                    <li><a href="paciente">Elegir Plan Nutricional</a></li>
-                    <li><a href="registrarPesoDiario">Registrar Peso Diario</a></li>
-                    <li><a class="btn active white" href="#">Ver Progreso</a></li>
+                    <li><a class="btn" href="home">Inicio</a></li>
+                    <c:if test="${ROL=='medico'}" >
+                    	<li><a class="btn" href="registrarusuario">Registrar Paciente</a></li>  
+                    	<li><a class="btn" href="registrarPesoDiario">Registrar Peso Diario</a></li>
+                   		<li><a class="btn active white" href="progresoSeleccionarPaciente">Ver Progreso</a></li>
+                   	</c:if>
+                    <c:if test="${ROL!='medico'}" >
+                    	<li><a class="btn" href="verplan">Ver Plan</a></li>
+                    	<li><a class="btn" href="registrarConsumoAlimento">Registrar Comida</a></li>
+                    </c:if>
                 </ul>
             </nav>
 		</header>
@@ -44,9 +50,11 @@
 				        </c:when>
 				        <c:otherwise>
 							<form:form action="progresoPaciente" method="POST" modelAttribute="paciente">
-								<label>Paciente</label>
-								<form:select path="idUsuario" class="form-control">
-									<form:options itemValue="idUsuario" itemLabel="nombre" items="${listadoPacientes}"></form:options>
+								<label>Paciente</label>				
+								<form:select path="id" class="form-control">
+								<c:forEach items="${listadoPacientes}" var = "i">
+								<form:option value="${i.id}">${i.nombre}</form:option>
+								</c:forEach>]
 								</form:select>
 								<br />
 								<br />
